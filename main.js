@@ -10,5 +10,3 @@ function executeTest(test) {
 
 const test = fs.readFileSync('01.in', 'utf-8');
 executeTest(test);
-
-
