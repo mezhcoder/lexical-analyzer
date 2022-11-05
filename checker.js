@@ -19,7 +19,7 @@ let successTest = 0;
 for (const [key, value] of Object.entries(tests)) {
     const testIn = fs.readFileSync(value.pathFileTestIn, 'utf-8');
     const testOut = fs.readFileSync(value.pathFileTestOut, 'utf-8');
-    const result = analysis(testIn);
+    // const result = Lex(testIn);
     if (result === testOut) {
         console.log(`✅ ${key} Test success`);
         successTest++;
