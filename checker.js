@@ -1,7 +1,5 @@
 const fs = require('fs');
-const analysis = require('./analyzer');
-
-
+const { getLexemes } = require('./parser/Lex')
 
 const tests = {}
 for (const nameFile of fs.readdirSync("tests")) {
@@ -19,12 +17,12 @@ let successTest = 0;
 for (const [key, value] of Object.entries(tests)) {
     const testIn = fs.readFileSync(value.pathFileTestIn, 'utf-8');
     const testOut = fs.readFileSync(value.pathFileTestOut, 'utf-8');
-    // const result = Lex(testIn);
+    const result = getLexemes(testIn);
     if (result === testOut) {
-        console.log(`✅ ${key} Test success`);
+        console.log(`🟢 ${key} Test success`);
         successTest++;
     } else {
-        console.log(`❌ ${key} Test error`);
+        console.log(`🔴 ${key} Test error`);
     }
 }
 console.log(`Total tests: ${successTest}/${Object.keys(tests).length}`)

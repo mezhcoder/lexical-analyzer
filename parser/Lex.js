@@ -67,17 +67,20 @@ class LexicalAnalyzer {
     }
 }
 
-const line = '#65#66'
-const bufferReader = new BufferReader(line);
-const lexicalAnalyzer = new LexicalAnalyzer(bufferReader);
+function getLexemes(line) {
+    const bufferReader = new BufferReader(line);
+    const lexicalAnalyzer = new LexicalAnalyzer(bufferReader);
 
-let lexem = undefined;
-do {
-    lexem = lexicalAnalyzer.nextLexem(bufferReader);
-    console.log(
-        lexem.cursor.j, '\t',
-        lexem.cursor.i, '\t',
-        lexem.type.key, '\t',
-        lexem.token
-    );
-} while (lexem.type !== Type.EOF);
+    const result = [];
+    let lexem = undefined;
+    do {
+        lexem = lexicalAnalyzer.nextLexem(bufferReader);
+        const lexemFormatStr = `${lexem.cursor.j}    ${lexem.cursor.i}    ${lexem.type.key}    ${lexem.token}`;
+        result.push(lexemFormatStr);
+    } while (lexem.type !== Type.EOF);
+    return result.join('');
+}
+
+module.exports = {
+    getLexemes
+}
