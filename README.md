@@ -1,10 +1,7 @@
-lexical-analyzer</br>
-NodeJS v16.18.0 is required to run the analyzer
-# Git clone your localhost and open folder lexical-analyzer
-```sh
-git clone https://github.com/mezhcoder/lexical-analyzer && cd lexical-analyzer
-```
-# To run use tests the command
-```sh
-node checker.js
-```
+# Lexical analyzator Pascal
+
+Group students Far Eastern Federal University Б9120-09.03.03пикд Nikita Zhidenko.
+
+## Commands
+Install depended packets `npm install`</br>
+Run tests `npm run test`
