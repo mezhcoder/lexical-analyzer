@@ -56,6 +56,7 @@ class BufferReader {
             char = this._dataIter.next().value;
             if (char === '\n' || char === '\r') {
                 this.addCursorLineFromColumn();
+                this._cursor.i = 0;
             } else {
                 return char;
             }
