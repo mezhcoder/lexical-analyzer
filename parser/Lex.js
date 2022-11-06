@@ -3,6 +3,8 @@ const _ = require('lodash-contrib');
 const { BufferReader } = require("./BufferReader");
 const { Type, Token } = require('./TokenEnum');
 
+const LexicalError = require('./LexicalError');
+
 class LexicalAnalyzer {
     constructor(bufferReader) {
         this.bufferReader = bufferReader;
@@ -10,21 +12,18 @@ class LexicalAnalyzer {
         this.type = Type.ERROR;
     }
 
-    processingString() {
-
-    }
-
-    //реализовать возможность ходить назад и вперед курсором по буфферу
     processingChar() {
         let charIndexes = '';
         if (this.bufferReader.peekChar() === '#') {
-            console.log('ошибка');
+            throw new LexicalError(`Error parse. Line: ${this.bufferReader.getCursor().j} ` +
+                `and char: ${this.bufferReader.getCursor().i}`);
         }
         while (_.isNumeric(this.bufferReader.peekChar())) {
             charIndexes += this.bufferReader.nextChar();
         }
         if (charIndexes.length === 0) {
-            console.log('ошибка');
+            throw new LexicalError(`Error parse. Line: ${this.bufferReader.getCursor().j} ` +
+                `and char: ${this.bufferReader.getCursor().i}`);
         }
         this.bufferReader.addCharIntoBuffer(charIndexes);
         this.token += String.fromCharCode(charIndexes);
