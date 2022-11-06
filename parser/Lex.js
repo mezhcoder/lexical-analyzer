@@ -78,7 +78,7 @@ function getLexemes(line) {
         const lexemFormatStr = `${lexem.cursor.j}    ${lexem.cursor.i}    ${lexem.type.key}    ${lexem.token}`;
         result.push(lexemFormatStr);
     } while (lexem.type !== Type.EOF);
-    return result.join('');
+    return result.join('\n');
 }
 
 module.exports = {

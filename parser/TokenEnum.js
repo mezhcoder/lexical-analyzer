@@ -15,23 +15,8 @@ const Token = new Enum([
     'ASSIGN',
     'ADD',
     'SUB',
-    'MUL',
-    'DIV_REAL',
-    'ADD_ASSIGN',
-    'SUB_ASSIGN',
-    'MUL_ASSIGN',
-    'DIV_ASSIGN',
-    'MOD_ASSIGN',
-
-    'EQUAL',
     'LESS',
     'MORE',
-    'NOT_EQUAL',
-    'LESS_EQUAL',
-    'MORE_EQUAL',
-
-    'O_SHL',
-    'O_SHR'
 ]);
 
 module.exports = {

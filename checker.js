@@ -19,10 +19,10 @@ for (const [key, value] of Object.entries(tests)) {
     const testOut = fs.readFileSync(value.pathFileTestOut, 'utf-8');
     const result = getLexemes(testIn);
     if (result === testOut) {
-        console.log(`🟢 ${key} Test success`);
+        console.log(`🟢 ${key} success`);
         successTest++;
     } else {
-        console.log(`🔴 ${key} Test error`);
+        console.log(`🔴 ${key} error`);
     }
 }
 console.log(`Total tests: ${successTest}/${Object.keys(tests).length}`)
