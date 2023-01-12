@@ -1,19 +1,22 @@
+import sys
+
+
 class AST:
     def __init__(self, operator, left, right):
         self.operator = operator
         self.left = left
         self.right = right
 
-    def print_tree(self, is_last=True, level=0):
+    def fill_arr_str_tree(self, is_last=True, level=0, arr_str_tree=None):
         if level != 0:
             prefix = "    " * (level - 1) + ("└── " if is_last else "├── ")
-            print(prefix + self.operator)
+            arr_str_tree.append(prefix + self.operator)
         else:
-            print(self.operator)
+            arr_str_tree.append(self.operator)
         if self.left:
-            self.left.print_tree(False, level + 1)
+            self.left.fill_arr_str_tree(False, level + 1, arr_str_tree)
         if self.right:
-            self.right.print_tree(True, level + 1)
+            self.right.fill_arr_str_tree(True, level + 1, arr_str_tree)
 
     def __str__(self):
         return f"({self.operator} {self.left} {self.right})"
@@ -59,7 +62,7 @@ class Parser:
             self.index += 1  # skip ')'
             return expression
         else:
-            raise ValueError(f'Invalid token: {token}')
+            raise ValueError(f'Invalid token at position {self.index + 1}: {token}')
 
 
 def lexer(expression):
@@ -82,13 +85,16 @@ def lexer(expression):
     return tokens
 
 
-def main():
-    expression = "3 * (5 + a)"
+def cli():
+    expression = sys.argv[1]
     tokens = lexer(expression)
     parser = Parser(tokens)
     ast = parser.parse()
-    ast.print_tree()
+
+    arr_str_tree = []
+    ast.fill_arr_str_tree(arr_str_tree=arr_str_tree)
+    print('\n'.join(arr_str_tree))
 
 
 if __name__ == "__main__":
-    main()
+    cli()
