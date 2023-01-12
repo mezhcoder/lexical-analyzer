@@ -116,7 +116,7 @@ class Lexer:
         else:
             return self.text[peek_pos]
 
-    def lex(self, text):
+    def test_lex(self, text):
         self.text = text
         self.pos = 0
         self.current_char = self.text[self.pos]
