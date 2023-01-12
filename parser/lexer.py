@@ -125,10 +125,10 @@ class Lexer:
         while True:
             token = self.get_next_token()
             tokens.append(
-                f"{token['position'][0]}\t"
-                f"{token['position'][1]}\t"
-                f"{token['type']}\t"
-                f"{token['value']}\t"
+                f"{token['position'][0]}      "
+                f"{token['position'][1]}      "
+                f"{token['type']}      "
+                f"{token['value']}      "
                 f"{token['value']}"
             )
             if token['type'] == 'EOF':

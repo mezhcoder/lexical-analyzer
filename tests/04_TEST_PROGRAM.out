@@ -1,0 +1,14 @@
+0      7      program      program      program
+8      11      ID      foo      foo
+11      12      ;      ;      ;
+13      16      var      var      var
+17      18      ID      x      x
+18      19      ,      ,      ,
+20      21      ID      y      y
+21      22      :      :      :
+23      30      integer      integer      integer
+30      31      ;      ;      ;
+32      37      begin      begin      begin
+38      41      end      end      end
+41      42      .      .      .
+42      42      EOF      EOF      EOF

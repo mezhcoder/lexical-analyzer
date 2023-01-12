@@ -1,11 +1,6 @@
 import glob
 from parser.lexer import Lexer
 
-# lexer = Lexer()
-# tokens = lexer.lex('program foo; var x, y: integer; begin end.')
-# for token in tokens:
-#     print(token)
-
 tests = [f for f in glob.glob("tests/*.in")]
 success_test = 0
 for test in tests:
@@ -19,5 +14,4 @@ for test in tests:
         success_test += 1
     else:
         print(f"🔴 Error test: {test.replace('tests/', '')}")
-print('\n')
 print(f"Total: {success_test}/{len(tests)}")
