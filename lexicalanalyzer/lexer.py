@@ -20,6 +20,7 @@ class TokenType(Enum):
     BEGIN = 'begin'
     END = 'end'
     ASSIGN = ':='
+    DOT = '.'
 
 
 @dataclass
@@ -49,6 +50,13 @@ class Lexer:
             ')': TokenType.RPAREN,
             ':=': TokenType.ASSIGN
         }
+
+    def peek(self):
+        peek_pos = self.pos + 1
+        if peek_pos > len(self.text) - 1:
+            return None
+        else:
+            return self.text[peek_pos]
 
     def error(self):
         raise Exception(f'Invalid character at position {self.pos}')
@@ -95,11 +103,22 @@ class Lexer:
             if self.current_char.isdigit():
                 return self.integer()
 
+            if self.current_char == ':' and self.peek() == '=':  # new logic added here
+                start_pos = self.pos
+                self.advance()
+                self.advance()
+                return Token(type=TokenType.ASSIGN, value=':=', position=(start_pos, self.pos))
+
             if self.current_char in self.token_map:
                 start_pos = self.pos
                 token_type = self.token_map[self.current_char]
                 self.advance()
                 return Token(type=token_type, value=token_type.value, position=(start_pos, self.pos))
+
+            if self.current_char == '.':
+                start_pos = self.pos
+                self.advance()
+                return Token(type=TokenType.DOT, value='.', position=(start_pos, self.pos))
 
             self.error()
 

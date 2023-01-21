@@ -1,4 +1,4 @@
-from .lexer import Lexer
+from lexer import Lexer
 import sys
 
 if len(sys.argv) > 1:
