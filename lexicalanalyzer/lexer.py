@@ -16,7 +16,6 @@ class TokenType(Enum):
     RPAREN = ')'
     PROGRAM = 'program'
     VAR = 'var'
-    INTEGER_TYPE = 'integer'
     BEGIN = 'begin'
     END = 'end'
     ASSIGN = ':='
