@@ -1,0 +1,18 @@
+program
+├── ID
+├── declarations
+│   └── var_declaration
+│       ├── ID
+│       └── TYPE
+└── compound_statement
+    └── statement
+        └── assign
+            ├── ID
+            └── Expression
+                ├── Term
+                │   └── INTEGER
+                ├── +
+                └── Term
+                    ├── INTEGER
+                    ├── *
+                    └── INTEGER
