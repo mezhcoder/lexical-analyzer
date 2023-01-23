@@ -1,5 +1,6 @@
-from syntaxanalyzer.parser import Parser
+from syntaxanalyzer.parser import Parser, get_str_tree
 from lexicalanalyzer.lexer import Lexer
+from tabulate import tabulate
 import pandas as pd
 
 
@@ -8,14 +9,23 @@ class SemanticAnalyzer:
         self.ast = ast
         self.symbol_table = {}
         self.current_scope = None
+        self.type_table = {}
+        self.current_expression_type = None
 
     def analyze(self):
         self.visit(self.ast)
-        print("Symbol Table:")
+        result_analyze = ""
+        result_analyze += "Symbol Table\n"
         symbol_table_df = pd.DataFrame(columns=['Type', 'Scope'])
         for var, value in self.symbol_table.items():
-            symbol_table_df = pd.concat([symbol_table_df, pd.DataFrame({'Type': value['type'], 'Scope': value['scope']}, index=[var])])
-        print(symbol_table_df.to_string())
+            symbol_table_df = pd.concat(
+                [symbol_table_df, pd.DataFrame({'Type': value['type'], 'Scope': value['scope']}, index=[var])])
+        result_analyze += tabulate(symbol_table_df, headers='keys', tablefmt='pipe', showindex=False)
+        result_analyze += "\n"
+        result_analyze += "Type Table\n"
+        type_table_df = pd.DataFrame.from_dict(self.type_table, orient='index', columns=['Type'])
+        result_analyze += tabulate(type_table_df, headers='keys', tablefmt='pipe', showindex=True)
+        return result_analyze
 
     def visit(self, node):
         method_name = 'visit_' + node.type
@@ -42,6 +52,9 @@ class SemanticAnalyzer:
         if var_name in self.symbol_table:
             raise NameError(f"Variable {var_name} already declared in scope {self.current_scope}.")
         self.symbol_table[var_name] = {'type': var_type, 'scope': self.current_scope}
+        if var_type not in self.type_table:
+            self.type_table[var_type] = []
+        self.type_table[var_type].append(var_name)
 
     def visit_compound_statement(self, node):
         for child in node.children:
@@ -54,45 +67,60 @@ class SemanticAnalyzer:
         var_name = node.children[0].value
         if var_name not in self.symbol_table:
             raise NameError(f"Variable {var_name} not declared in scope {self.current_scope}.")
-        var_type = self.symbol_table[var_name]['type']
         self.visit(node.children[1])
-        if var_type != 'integer':
-            raise TypeError(f"Type mismatch for variable {var_name} in scope {self.current_scope}.")
+        var_type = self.symbol_table[var_name]['type']
+        if var_type != self.current_expression_type and self.current_expression_type is not None:
+            raise TypeError(
+                f"Type mismatch for variable {var_name} in scope {self.current_scope}. Expected {var_type} but got {self.current_expression_type}.")
+        self.current_expression_type = None
 
     def visit_expression(self, node):
         self.visit(node.children[0])
         if len(node.children) > 1:
+            self.visit(node.children[1])
             self.visit(node.children[2])
+            if self.current_expression_type != 'integer':
+                raise TypeError(f"Expression type must be integer but got {self.current_expression_type}")
 
     def visit_term(self, node):
         self.visit(node.children[0])
         if len(node.children) > 1:
+            self.visit(node.children[1])
             self.visit(node.children[2])
+            if self.current_expression_type != 'integer':
+                raise TypeError(f"Term type must be integer but got {self.current_expression_type}")
 
     def visit_factor(self, node):
         if node.children[0].type == 'ID':
             var_name = node.children[0].value
-            if var_name not in self.symbol_table:
+            if var_name in self.symbol_table:
+                self.current_expression_type = self.symbol_table[var_name]['type']
+            else:
                 raise NameError(f"Variable {var_name} not declared in scope {self.current_scope}.")
-            self.symbol_table[var_name]['Scope'] = self.current_scope
-        self.visit(node.children[0])
+        elif node.children[0].type == 'NUM':
+            self.current_expression_type = 'integer'
 
-# Input program
-program = "program Test; var x: integer; begin x := 2 + 3 * 4; end."
 
-# Lexer
-lexer = Lexer()
-lexer.text = program
-lexer.current_char = lexer.text[lexer.pos]
+    def visit_type(self, node):
+        self.current_expression_type = node.value
 
-# Parser
-parser = Parser(lexer)
-ast = parser.program()
 
-# Semantic Analyzer
-semantic_analyzer = SemanticAnalyzer(ast=ast)
-semantic_analyzer.analyze()
+def get_result_semantic_analyzer(program : str):
+    result_semantic_analyzer = ''
+    # Lexer
+    lexer = Lexer()
+    lexer.text = program
+    lexer.current_char = lexer.text[lexer.pos]
 
-# Output
-print("Semantic analysis complete - no errors found.")
+    # Parser
+    parser = Parser(lexer)
+    ast = parser.program()
+
+    ast_result = get_str_tree(ast.to_dict())
+    result_semantic_analyzer += ast_result
+    result_semantic_analyzer += '\n'
+
+    semantic_analyzer = SemanticAnalyzer(ast=ast)
+    result_semantic_analyzer += semantic_analyzer.analyze()
+    return result_semantic_analyzer
 

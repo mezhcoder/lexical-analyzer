@@ -1,0 +1,27 @@
+program
+├── ID
+├── declarations
+│   └── var_declaration
+│       ├── ID
+│       └── TYPE
+├── subprogram_declarations
+└── compound_statement
+    └── statement
+        └── assign
+            ├── ID
+            └── Expression
+                ├── Term
+                │   └── INTEGER
+                ├── +
+                └── Term
+                    ├── INTEGER
+                    ├── *
+                    └── INTEGER
+Symbol Table
+| Type    | Scope   |
+|:--------|:--------|
+| integer | Test    |
+Type Table
+|         | Type   |
+|:--------|:-------|
+| integer | x      |
