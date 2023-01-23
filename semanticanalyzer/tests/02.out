@@ -1,0 +1,11 @@
+program
+├── ID
+├── declarations
+├── subprogram_declarations
+└── compound_statement
+Symbol Table
+| Type   | Scope   |
+|--------|---------|
+Type Table
+| Type   |
+|--------|
