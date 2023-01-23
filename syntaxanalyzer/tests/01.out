@@ -12,8 +12,8 @@ program
             └── Expression
                 ├── Term
                 │   └── INTEGER
-                ├── +
+                ├── 3
                 └── Term
                     ├── INTEGER
-                    ├── *
+                    ├── 4
                     └── INTEGER

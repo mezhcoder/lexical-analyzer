@@ -32,7 +32,7 @@ class Token:
     position: tuple
 
     def __repr__(self):
-        return f"{self.position[0]}\t{self.position[1] + 1}\t{self.type.value}\t{self.value}\t{self.value}"
+        return f"{self.position[0]}\t{self.position[1] + 1}\t{self.type.value}\t{self.value}\t{self.value}".strip()
 
 
 class Lexer:
@@ -137,4 +137,3 @@ class Lexer:
             token = self.get_next_token()
             tokens.append(token)
         return tokens
-

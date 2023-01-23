@@ -1,1 +1,1 @@
-program Test; var x: integer; begin x := 2 + 3 * 4; end.
+program Test; var x: integer; begin x := 2+3*4; end.
