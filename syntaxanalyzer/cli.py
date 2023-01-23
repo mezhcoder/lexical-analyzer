@@ -6,7 +6,7 @@ def cli():
     import sys
 
     lexer = Lexer()
-    lexer.text = sys.argv[1]
+    lexer.text = 'program Test; var x: integer; begin x := 2 + 3 * 4; end.'
     lexer.current_char = lexer.text[lexer.pos]
 
     parser = Parser(lexer)

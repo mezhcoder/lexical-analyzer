@@ -7,7 +7,7 @@ for test in tests:
     lexer = Lexer()
     try:
         with open(test, 'r') as content:
-            got_lexeme = lexer.test_lex(str(content.read()))
+            got_lexeme = '\n'.join(str(token).strip() for token in lexer.tokenize(text=str(content.read())))
         with open(test.replace('.in', '.out'), 'r') as expected_file:
             expected_lexeme = expected_file.read()
         if got_lexeme == expected_lexeme:

@@ -1,1 +1,3 @@
-program foo; var x, y: integer; begin end
+program foo;
+var x, y: integer;
+begin end.

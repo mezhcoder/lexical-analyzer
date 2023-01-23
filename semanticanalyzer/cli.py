@@ -6,7 +6,7 @@ from syntaxanalyzer.parser import Parser, get_str_tree
 def cli():
     import sys
 
-    program = sys.argv[1]
+    program = 'program Test; begin end.'
     print(get_result_semantic_analyzer(program))
 
 

@@ -1,3 +1,4 @@
+#return f"{self.position[0]}\t{self.position[1]}\t{self.type.value}\t{self.value}\t{self.value}"
 from dataclasses import dataclass
 from enum import Enum
 
@@ -31,7 +32,7 @@ class Token:
     position: tuple
 
     def __repr__(self):
-        return f"Token({self.type}, {self.value}, {self.position})"
+        return f"{self.position[0]}\t{self.position[1] + 1}\t{self.type.value}\t{self.value}\t{self.value}"
 
 
 class Lexer:
@@ -39,6 +40,7 @@ class Lexer:
         self.text = None
         self.pos = 0
         self.current_char = None
+        self.line_number = 1
         self.token_map = {
             ';': TokenType.SEMI,
             ':': TokenType.COLON,
@@ -49,7 +51,7 @@ class Lexer:
             '/': TokenType.FLOAT_DIV,
             '(': TokenType.LPAREN,
             ')': TokenType.RPAREN,
-            ':=': TokenType.ASSIGN
+            ':=': TokenType.ASSIGN,
         }
 
     def peek(self):
@@ -70,7 +72,10 @@ class Lexer:
             self.current_char = self.text[self.pos]
 
     def skip_whitespace(self):
-        while self.current_char is not None and self.current_char.isspace():
+        while self.current_char is not None and self.current_char.isspace() and self.current_char != '\n':
+            self.advance()
+        if self.current_char == '\n':
+            self.line_number += 1
             self.advance()
 
     def integer(self):
@@ -79,7 +84,7 @@ class Lexer:
         while self.current_char is not None and self.current_char.isdigit():
             result += self.current_char
             self.advance()
-        return Token(type=TokenType.INTEGER, value=int(result), position=(start_pos, self.pos))
+        return Token(type=TokenType.INTEGER, value=int(result), position=(self.line_number, start_pos))
 
     def _id(self):
         start_pos = self.pos
@@ -88,9 +93,9 @@ class Lexer:
             result += self.current_char
             self.advance()
         if result in ['program', 'var', 'integer', 'begin', 'end']:
-            return Token(type=TokenType[result.upper()], value=result, position=(start_pos, self.pos))
+            return Token(type=TokenType[result.upper()], value=result, position=(self.line_number, start_pos))
         else:
-            return Token(type=TokenType.ID, value=result, position=(start_pos, self.pos))
+            return Token(type=TokenType.ID, value=result, position=(self.line_number, start_pos))
 
     def get_next_token(self):
         while self.current_char is not None:
@@ -108,36 +113,28 @@ class Lexer:
                 start_pos = self.pos
                 self.advance()
                 self.advance()
-                return Token(type=TokenType.ASSIGN, value=':=', position=(start_pos, self.pos))
+                return Token(type=TokenType.ASSIGN, value=':=', position=(self.line_number, start_pos))
 
             if self.current_char in self.token_map:
-                start_pos = self.pos
                 token_type = self.token_map[self.current_char]
+                start_pos = self.pos
                 self.advance()
-                return Token(type=token_type, value=token_type.value, position=(start_pos, self.pos))
+                return Token(type=token_type, value=self.current_char, position=(self.line_number, start_pos))
 
             if self.current_char == '.':
                 start_pos = self.pos
                 self.advance()
-                return Token(type=TokenType.DOT, value='.', position=(start_pos, self.pos))
+                return Token(type=TokenType.DOT, value='.', position=(self.line_number, start_pos))
 
             self.error()
 
-    def test_lex(self, text):
+    def tokenize(self, text):
         self.text = text
         self.pos = 0
-        self.current_char = self.text[self.pos]
-
+        self.current_char = self.text[self.pos] if self.text else None
         tokens = []
-        while True:
+        while self.current_char is not None:
             token = self.get_next_token()
-            if not token:
-                break
-            tokens.append(
-                f"{token.position[0]}      "
-                f"{token.position[1]}      "
-                f"{token.type.value}      "
-                f"{token.value}      "
-                f"{token.value}"
-            )
-        return '\n'.join(tokens)
+            tokens.append(token)
+        return tokens
+
