@@ -20,6 +20,8 @@ class TokenType(Enum):
     END = 'end'
     ASSIGN = ':='
     DOT = '.'
+    PROCEDURE = 'procedure'
+    FUNCTION = 'function'
 
 
 @dataclass

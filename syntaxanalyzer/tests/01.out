@@ -4,6 +4,7 @@ program
 │   └── var_declaration
 │       ├── ID
 │       └── TYPE
+├── subprogram_declarations
 └── compound_statement
     └── statement
         └── assign

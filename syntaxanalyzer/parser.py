@@ -60,7 +60,50 @@ class Parser:
         return declarations_node
 
     def subprogram_declarations(self):
-        pass
+        subprogram_declarations_node = Node('subprogram_declarations')
+        while self.current_token.type in (TokenType.PROCEDURE, TokenType.FUNCTION):
+            subprogram_node = Node('subprogram')
+            subprogram_node.children.append(self.subprogram_head())
+            subprogram_node.children.append(self.declarations())
+            subprogram_node.children.append(self.compound_statement())
+            subprogram_declarations_node.children.append(subprogram_node)
+        return subprogram_declarations_node
+
+    def subprogram_head(self):
+        subprogram_head_node = Node('subprogram_head')
+        if self.current_token.type == TokenType.PROCEDURE:
+            self.eat(TokenType.PROCEDURE)
+            subprogram_head_node.children.append(Node('PROCEDURE'))
+        elif self.current_token.type == TokenType.FUNCTION:
+            self.eat(TokenType.FUNCTION)
+            subprogram_head_node.children.append(Node('FUNCTION'))
+        subprogram_head_node.children.append(Node('ID', self.current_token.value))
+        self.eat(TokenType.ID)
+        if self.current_token.type == TokenType.LPAREN:
+            self.eat(TokenType.LPAREN)
+            subprogram_head_node.children.append(self.parameter_list())
+            self.eat(TokenType.RPAREN)
+        self.eat(TokenType.COLON)
+        subprogram_head_node.children.append(Node('TYPE', self.current_token.value))
+        self.eat(TokenType.INTEGER)
+        self.eat(TokenType.SEMI)
+        return subprogram_head_node
+
+    def parameter_list(self):
+        parameter_list_node = Node('parameter_list')
+        parameter_list_node.children.append(Node('ID', self.current_token.value))
+        self.eat(TokenType.ID)
+        self.eat(TokenType.COLON)
+        parameter_list_node.children.append(Node('TYPE', self.current_token.value))
+        self.eat(TokenType.INTEGER)
+        while self.current_token.type == TokenType.SEMI:
+            self.eat(TokenType.SEMI)
+            parameter_list_node.children.append(Node('ID', self.current_token.value))
+            self.eat(TokenType.ID)
+            self.eat(TokenType.COLON)
+            parameter_list_node.children.append(Node('TYPE', self.current_token.value))
+            self.eat(TokenType.INTEGER)
+        return parameter_list_node
 
     def compound_statement(self):
         compound_statement_node = Node('compound_statement')
@@ -137,19 +180,3 @@ def get_str_tree(program_data):
     for pre, fill, node in RenderTree(root):
         result += ("%s%s" % (pre, node.name)) + "\n"
     return result.strip()
-
-
-def cli():
-    import sys
-
-    lexer = Lexer()
-    lexer.text = sys.argv[1]
-    lexer.current_char = lexer.text[lexer.pos]
-
-    parser = Parser(lexer)
-    result = get_str_tree(parser.program().to_dict())
-    print(result)
-
-
-if __name__ == "__main__":
-    cli()
