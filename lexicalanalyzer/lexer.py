@@ -104,7 +104,7 @@ class Lexer:
             if self.current_char.isdigit():
                 return self.integer()
 
-            if self.current_char == ':' and self.peek() == '=':  # new logic added here
+            if self.current_char == ':' and self.peek() == '=':
                 start_pos = self.pos
                 self.advance()
                 self.advance()
