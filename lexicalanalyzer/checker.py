@@ -14,7 +14,7 @@ for test in tests:
             print(f"🟢 Test: {test.replace('tests/', '')}")
             success_test += 1
         else:
-            print(repr(got_lexeme), repr(expected_lexeme))
+            print(got_lexeme)
             print(f"🔴 Error test: {test.replace('tests/', '')}")
     except Exception as e:
         print(f"🔴 Error test: {test.replace('tests/', '')}\nMessage: {str(e)}")

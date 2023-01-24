@@ -41,6 +41,7 @@ class Lexer:
         self.pos = 0
         self.current_char = None
         self.line_number = 1
+        self.symbol_number = 0
         self.token_map = {
             ';': TokenType.SEMI,
             ':': TokenType.COLON,
@@ -66,6 +67,7 @@ class Lexer:
 
     def advance(self):
         self.pos += 1
+        self.symbol_number += 1
         if self.pos > len(self.text) - 1:
             self.current_char = None
         else:
@@ -76,10 +78,11 @@ class Lexer:
             self.advance()
         if self.current_char == '\n':
             self.line_number += 1
+            self.symbol_number = -1
             self.advance()
 
     def integer(self):
-        start_pos = self.pos
+        start_pos = self.symbol_number
         result = ''
         while self.current_char is not None and self.current_char.isdigit():
             result += self.current_char
@@ -87,7 +90,7 @@ class Lexer:
         return Token(type=TokenType.INTEGER, value=int(result), position=(self.line_number, start_pos))
 
     def _id(self):
-        start_pos = self.pos
+        start_pos = self.symbol_number
         result = ''
         while self.current_char is not None and self.current_char.isalnum():
             result += self.current_char
@@ -110,19 +113,19 @@ class Lexer:
                 return self.integer()
 
             if self.current_char == ':' and self.peek() == '=':
-                start_pos = self.pos
+                start_pos = self.symbol_number
                 self.advance()
                 self.advance()
                 return Token(type=TokenType.ASSIGN, value=':=', position=(self.line_number, start_pos))
 
             if self.current_char in self.token_map:
                 token_type = self.token_map[self.current_char]
-                start_pos = self.pos
+                start_pos = self.symbol_number
                 self.advance()
                 return Token(type=token_type, value=self.current_char, position=(self.line_number, start_pos))
 
             if self.current_char == '.':
-                start_pos = self.pos
+                start_pos = self.symbol_number
                 self.advance()
                 return Token(type=TokenType.DOT, value='.', position=(self.line_number, start_pos))
 
@@ -131,6 +134,7 @@ class Lexer:
     def tokenize(self, text):
         self.text = text
         self.pos = 0
+        self.symbol_number = 0
         self.current_char = self.text[self.pos] if self.text else None
         tokens = []
         while self.current_char is not None:
