@@ -1,4 +1,3 @@
-#return f"{self.position[0]}\t{self.position[1]}\t{self.type.value}\t{self.value}\t{self.value}"
 from dataclasses import dataclass
 from enum import Enum
 
