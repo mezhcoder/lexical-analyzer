@@ -28,6 +28,7 @@ class Lexeme(Enum):
     LPAREN = '('
     RPAREN = ')'
     #KEYWORD
+
     KEYWORD = 'KEYWORD'
     PROGRAM = 'program'
     VAR = 'var'
