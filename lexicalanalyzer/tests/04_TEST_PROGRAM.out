@@ -1,13 +1,13 @@
-1	1	program	program	program
+1	1	KEYWORD	program	program
 1	9	ID	foo	foo
 1	12	;
-2	1	var	var	var
+2	1	KEYWORD	var	var
 2	5	ID	x	x
 2	6	,
 2	8	ID	y	y
 2	9	:
-2	11	INTEGER	integer	integer
+2	11	ID	integer	integer
 2	18	;
-3	1	begin	begin	begin
-3	7	end	end	end
+3	1	KEYWORD	begin	begin
+3	7	KEYWORD	end	end
 3	10	.	.	.

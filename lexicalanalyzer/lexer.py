@@ -14,6 +14,8 @@ class TokenType(Enum):
     FLOAT_DIV = '/'
     LPAREN = '('
     RPAREN = ')'
+    #KEYWORD
+    KEYWORD = 'KEYWORD'
     PROGRAM = 'program'
     VAR = 'var'
     BEGIN = 'begin'
@@ -22,6 +24,18 @@ class TokenType(Enum):
     DOT = '.'
     PROCEDURE = 'procedure'
     FUNCTION = 'function'
+
+    @classmethod
+    def is_keyword(cls, value: str) -> bool:
+        start_keyword = TokenType.KEYWORD.name
+        end_keyword = TokenType.FUNCTION.name
+        members = cls.__members__
+        keys = list(members.keys())
+        keywords = keys[keys.index(start_keyword) : keys.index(end_keyword) + 1]
+        return any(
+            members[e].value == value
+            for e in keywords
+        )
 
 
 @dataclass
@@ -94,8 +108,9 @@ class Lexer:
         while self.current_char is not None and self.current_char.isalnum():
             result += self.current_char
             self.advance()
-        if result in ['program', 'var', 'integer', 'begin', 'end']:
-            return Token(type=TokenType[result.upper()], value=result, position=(self.line_number, start_pos))
+        # Check if the identifier is a keyword
+        if TokenType.is_keyword(result):
+            return Token(type=TokenType.KEYWORD, value=result, position=(self.line_number, start_pos))
         else:
             return Token(type=TokenType.ID, value=result, position=(self.line_number, start_pos))
 
