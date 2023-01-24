@@ -22,6 +22,7 @@ for test in tests:
             success_test += 1
         else:
             print(f"🔴 Error test: {test.replace('tests/', '')}")
+            print(got_data)
     except Exception as e:
         print(f"🔴 Error test: {test.replace('tests/', '')}\nMessage: {str(e)}")
 

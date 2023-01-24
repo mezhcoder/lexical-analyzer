@@ -2,7 +2,7 @@ from lexer import Lexer
 import sys
 
 lexer = Lexer()
-tokens = lexer.tokenize('program foo; var x, y: integer; begin end')
+tokens = lexer.tokenize('program Test; var x: integer; begin x := 2+3*4; end.')
 print('\n'.join(str(token) for token in tokens))
 # if len(sys.argv) > 1:
 #     lexer = Lexer()

@@ -3,6 +3,19 @@ from enum import Enum
 
 
 class TokenType(Enum):
+    KEYWORD = 'KEYWORD'
+    ID = 'ID'
+    INTEGER = 'INTEGER'
+    DOUBLE = 'DOUBLE'
+    CHAR = 'CHAR'
+    STRING = 'STRING'
+    OPERATOR = 'OPERATOR'
+    SEPERATOR = 'SEPERATOR'
+    COMMENT = 'COMMENT'
+    EOF = 'EOF'
+
+
+class Lexeme(Enum):
     INTEGER = 'INTEGER'
     ID = 'ID'
     SEMI = ';'
@@ -27,8 +40,8 @@ class TokenType(Enum):
 
     @classmethod
     def is_keyword(cls, value: str) -> bool:
-        start_keyword = TokenType.KEYWORD.name
-        end_keyword = TokenType.FUNCTION.name
+        start_keyword = Lexeme.KEYWORD.name
+        end_keyword = Lexeme.FUNCTION.name
         members = cls.__members__
         keys = list(members.keys())
         keywords = keys[keys.index(start_keyword) : keys.index(end_keyword) + 1]
@@ -41,6 +54,7 @@ class TokenType(Enum):
 @dataclass
 class Token:
     type: TokenType
+    lexeme: Lexeme
     value: str
     position: tuple
 
@@ -55,17 +69,17 @@ class Lexer:
         self.current_char = None
         self.line_number = 1
         self.symbol_number = 0
-        self.token_map = {
-            ';': TokenType.SEMI,
-            ':': TokenType.COLON,
-            ',': TokenType.COMMA,
-            '+': TokenType.PLUS,
-            '-': TokenType.MINUS,
-            '*': TokenType.MUL,
-            '/': TokenType.FLOAT_DIV,
-            '(': TokenType.LPAREN,
-            ')': TokenType.RPAREN,
-            ':=': TokenType.ASSIGN,
+        self.lexeme_map = {
+            ';': Lexeme.SEMI,
+            ':': Lexeme.COLON,
+            ',': Lexeme.COMMA,
+            '+': Lexeme.PLUS,
+            '-': Lexeme.MINUS,
+            '*': Lexeme.MUL,
+            '/': Lexeme.FLOAT_DIV,
+            '(': Lexeme.LPAREN,
+            ')': Lexeme.RPAREN,
+            ':=': Lexeme.ASSIGN,
         }
 
     def peek(self):
@@ -100,7 +114,10 @@ class Lexer:
         while self.current_char is not None and self.current_char.isdigit():
             result += self.current_char
             self.advance()
-        return Token(type=TokenType.INTEGER, value=int(result), position=(self.line_number, start_pos))
+        return Token(type=TokenType.INTEGER,
+                     lexeme=Lexeme.INTEGER,
+                     value=int(result),
+                     position=(self.line_number, start_pos))
 
     def _id(self):
         start_pos = self.symbol_number
@@ -109,10 +126,10 @@ class Lexer:
             result += self.current_char
             self.advance()
         # Check if the identifier is a keyword
-        if TokenType.is_keyword(result):
-            return Token(type=TokenType.KEYWORD, value=result, position=(self.line_number, start_pos))
+        if Lexeme.is_keyword(result):
+            return Token(type=TokenType.KEYWORD, lexeme=Lexeme(result), value=result, position=(self.line_number, start_pos))
         else:
-            return Token(type=TokenType.ID, value=result, position=(self.line_number, start_pos))
+            return Token(type=TokenType.ID, lexeme=Lexeme.ID, value=result, position=(self.line_number, start_pos))
 
     def get_next_token(self):
         while self.current_char is not None:
@@ -130,18 +147,18 @@ class Lexer:
                 start_pos = self.symbol_number
                 self.advance()
                 self.advance()
-                return Token(type=TokenType.ASSIGN, value=':=', position=(self.line_number, start_pos))
+                return Token(type=TokenType.OPERATOR, lexeme=Lexeme.ASSIGN, value=':=', position=(self.line_number, start_pos))
 
-            if self.current_char in self.token_map:
-                token_type = self.token_map[self.current_char]
+            if self.current_char in self.lexeme_map:
+                lexeme_type = self.lexeme_map[self.current_char]
                 start_pos = self.symbol_number
                 self.advance()
-                return Token(type=token_type, value=self.current_char, position=(self.line_number, start_pos))
+                return Token(type=TokenType.OPERATOR, lexeme=lexeme_type, value=lexeme_type.value, position=(self.line_number, start_pos))
 
             if self.current_char == '.':
                 start_pos = self.symbol_number
                 self.advance()
-                return Token(type=TokenType.DOT, value='.', position=(self.line_number, start_pos))
+                return Token(type=TokenType.OPERATOR, lexeme=Lexeme.DOT, value='.', position=(self.line_number, start_pos))
 
             self.error()
 

@@ -1,21 +1,21 @@
 1	1	KEYWORD	program	program
 1	9	ID	Test	Test
-1	13	;
+1	13	OPERATOR	;	;
 1	15	KEYWORD	var	var
 1	19	ID	x	x
-1	20	,
+1	20	OPERATOR	,	,
 1	22	ID	y	y
-1	23	:
+1	23	OPERATOR	:	:
 1	25	ID	integer	integer
-1	32	;
+1	32	OPERATOR	;	;
 1	34	KEYWORD	begin	begin
 1	40	ID	x	x
-1	42	:=	:=	:=
+1	42	OPERATOR	:=	:=
 1	45	INTEGER	2	2
-1	47	+
+1	47	OPERATOR	+	+
 1	49	INTEGER	3	3
-1	51	*
+1	51	OPERATOR	*	*
 1	53	INTEGER	4	4
-1	54	;
+1	54	OPERATOR	;	;
 1	56	KEYWORD	end	end
-1	59	.	.	.
+1	59	OPERATOR	.	.
