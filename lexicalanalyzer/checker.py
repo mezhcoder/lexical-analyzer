@@ -1,7 +1,7 @@
 import glob
 from lexer import Lexer
 
-tests = [f for f in glob.glob("tests/*.in")]
+tests = sorted([f for f in glob.glob("tests/*.in")])
 success_test = 0
 for test in tests:
     lexer = Lexer()

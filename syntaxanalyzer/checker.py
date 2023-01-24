@@ -4,7 +4,7 @@ from parser import *
 from lexicalanalyzer.lexer import Lexer
 from syntaxanalyzer.parser import Parser, get_str_tree
 
-tests = [f for f in glob.glob("tests/*.in")]
+tests = sorted([f for f in glob.glob("tests/*.in")])
 success_test = 0
 for test in tests:
     try:
