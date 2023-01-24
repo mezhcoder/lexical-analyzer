@@ -125,7 +125,6 @@ class Lexer:
         while self.current_char is not None and self.current_char.isalnum():
             result += self.current_char
             self.advance()
-        # Check if the identifier is a keyword
         if Lexeme.is_keyword(result):
             return Token(type=TokenType.KEYWORD, lexeme=Lexeme(result), value=result, position=(self.line_number, start_pos))
         else:
